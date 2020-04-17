@@ -17,10 +17,12 @@ jobs:
             - v1-dependencies-
 
       - run:
+          name: install dependencies # this is just a description (title) for the step
           command: |
             python3 -m venv venv 
-            source venv/bin/activate 
+            . venv/bin/activate 
             make install
+
       - save_cache: 
           paths: 
             - ./venv
@@ -29,4 +31,5 @@ jobs:
       - run:
           name: run lint # this is just a description
           command: |
+            . venv/bin/activate
             make lint
