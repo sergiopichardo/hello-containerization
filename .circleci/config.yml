@@ -1,34 +1,13 @@
-version: 2 
-jobs: 
-  build: 
-    docker: 
-      - image: circleci/python:3.6.4
-    working_directory: ~/repo
-    steps: 
-      - checkout 
-      - run: sudo chown -R circleci:circleci /usr/local/bin
-      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
-      
-      # Download and cache dependencies
-      - restore_cache:
-          keys: 
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run:
-          command: |
-            python3 -m venv venv 
-            source venv/bin/activate 
-            make install
-      - save_cache: 
-          paths: 
-            - ./venv
-          key: 
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-          paths:
-            - "venv"
-      - run:
-          name: run lint # this is just a description
-          command: |
-            make lint
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+# Orchestrate or schedule a set of jobs
+workflows:
+  # Name the workflow "welcome"
+  welcome:
+    # Run the welcome/run job in its own container
+    jobs:
+      - welcome/run
